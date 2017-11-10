@@ -83,6 +83,7 @@ config = DEV
 
 class MithrilTaskSet(TaskSet):
   tokens = {"MIS": None, "ADMIN": None, "OWNER": None}
+  employee_request_id = None
 
   @task(1)
   def login(self):
@@ -92,11 +93,11 @@ class MithrilTaskSet(TaskSet):
   def verify_token(self):
     self.client.get("/admin/tokens/{token}/verify".format(token=self.do_login()))
 
-  @task(100)
+  @task(50)
   def report_stats(self):
     self.client.get("/reports/stats")
 
-  @task(100)
+  @task(50)
   def get_dictionaries(self):
     self.client.get("/api/dictionaries")
 
@@ -116,6 +117,108 @@ class MithrilTaskSet(TaskSet):
       "signed_legal_entity_request": "ewogICAgInR5cGUiOiAiTVNQIiwKICAgICJzaG9ydF9uYW1lIjogItCb0LjQvNC40Ycg0JzQtdC00ZbQutCw0LsiLAogICAgInNlY3VyaXR5IjogewogICAgICAgICJyZWRpcmVjdF91cmkiOiAiaHR0cDovL2V4YW1wbGUyLmNvbSIKICAgIH0sCiAgICAicHVibGljX29mZmVyIjogewogICAgICAgICJjb25zZW50X3RleHQiOiAiQ29uc2VudCB0ZXh0IiwKICAgICAgICAiY29uc2VudCI6IHRydWUKICAgIH0sCiAgICAicHVibGljX25hbWUiOiAi0JvQuNC80LjRhyDQnNC10LTRltC60LDQuyIsCiAgICAicGhvbmVzIjogWwogICAgICAgIHsKICAgICAgICAgICAgInR5cGUiOiAiTU9CSUxFIiwKICAgICAgICAgICAgIm51bWJlciI6ICIrMzgwOTc5MTM0MjIzIgogICAgICAgIH0KICAgIF0sCiAgICAib3duZXJfcHJvcGVydHlfdHlwZSI6ICJTVEFURSIsCiAgICAib3duZXIiOiB7CiAgICAgICAgInRheF9pZCI6ICIyOTg4MTIwOTUzIiwKICAgICAgICAic2Vjb25kX25hbWUiOiAi0J7QvNC10LvRj9C90L7QstC40YciLAogICAgICAgICJwb3NpdGlvbiI6ICJQMSIsCiAgICAgICAgInBob25lcyI6IFsKICAgICAgICAgICAgewogICAgICAgICAgICAgICAgInR5cGUiOiAiTU9CSUxFIiwKICAgICAgICAgICAgICAgICJudW1iZXIiOiAiKzM4MDUwMzQxMDg3MCIKICAgICAgICAgICAgfQogICAgICAgIF0sCiAgICAgICAgImxhc3RfbmFtZSI6ICLQm9C40LzQuNGHIiwKICAgICAgICAiZ2VuZGVyIjogIkZFTUFMRSIsCiAgICAgICAgImZpcnN0X25hbWUiOiAi0J/QtdGC0YDQviIsCiAgICAgICAgImVtYWlsIjogImx5bXljaHBAZ21haWwuY29tIiwKICAgICAgICAiZG9jdW1lbnRzIjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAidHlwZSI6ICJQQVNTUE9SVCIsCiAgICAgICAgICAgICAgICAibnVtYmVyIjogIjEyMDUxOCIKICAgICAgICAgICAgfQogICAgICAgIF0sCiAgICAgICAgImJpcnRoX3BsYWNlIjogItCS0ZbQvdC90LjRhtGPLCDQo9C60YDQsNGX0L3QsCIsCiAgICAgICAgImJpcnRoX2RhdGUiOiAiMTk4NS0wNi0xNiIKICAgIH0sCiAgICAibmFtZSI6ICLQmtC70ZbQvdGW0LrQsCDQm9C40LzQuNGHINCc0LXQtNGW0LrQsNC7IiwKICAgICJtZWRpY2FsX3NlcnZpY2VfcHJvdmlkZXIiOiB7CiAgICAgICAgImxpY2Vuc2VzIjogWwogICAgICAgICAgICB7CiAgICAgICAgICAgICAgICAid2hhdF9saWNlbnNlZCI6ICLRgNC10LDQu9GW0LfQsNGG0ZbRjyDQvdCw0YDQutC+0YLQuNGH0L3QuNGFINC30LDRgdC+0LHRltCyIiwKICAgICAgICAgICAgICAgICJvcmRlcl9ubyI6ICLQmi0xMjMiLAogICAgICAgICAgICAgICAgImxpY2Vuc2VfbnVtYmVyIjogImZkMTIzNDQzIiwKICAgICAgICAgICAgICAgICJpc3N1ZWRfZGF0ZSI6ICIxOTkxLTA4LTE5IiwKICAgICAgICAgICAgICAgICJpc3N1ZWRfYnkiOiAi0JrQstCw0LvRltGE0ZbQutCw0YbQudC90LAg0LrQvtC80ZbRgdGW0Y8iLAogICAgICAgICAgICAgICAgImV4cGlyeV9kYXRlIjogIjE5OTEtMDgtMTkiLAogICAgICAgICAgICAgICAgImFjdGl2ZV9mcm9tX2RhdGUiOiAiMTk5MS0wOC0xOSIKICAgICAgICAgICAgfQogICAgICAgIF0sCiAgICAgICAgImFjY3JlZGl0YXRpb24iOiB7CiAgICAgICAgICAgICJvcmRlcl9ubyI6ICJmZDEyMzQ0MyIsCiAgICAgICAgICAgICJvcmRlcl9kYXRlIjogIjE5OTEtMDgtMTkiLAogICAgICAgICAgICAiaXNzdWVkX2RhdGUiOiAiMTk5MS0wOC0xOSIsCiAgICAgICAgICAgICJleHBpcnlfZGF0ZSI6ICIxOTkxLTA4LTE5IiwKICAgICAgICAgICAgImNhdGVnb3J5IjogIkZJUlNUIgogICAgICAgIH0KICAgIH0sCiAgICAibGVnYWxfZm9ybSI6ICIxNDAiLAogICAgImt2ZWRzIjogWwogICAgICAgICI4Ni4xMCIsCiAgICAgICAgIjgxLjIxIiwKICAgICAgICAiNDcuNzMiCiAgICBdLAogICAgImVtYWlsIjogImx5bXljaHBAZ21haWwuY29tIiwKICAgICJlZHJwb3UiOiAiMzE2MDQwNTE5MiIsCiAgICAiYWRkcmVzc2VzIjogWwogICAgICAgIHsKICAgICAgICAgICAgInppcCI6ICIwMjA5MCIsCiAgICAgICAgICAgICJ0eXBlIjogIlJFR0lTVFJBVElPTiIsCiAgICAgICAgICAgICJzdHJlZXRfdHlwZSI6ICJTVFJFRVQiLAogICAgICAgICAgICAic3RyZWV0IjogItCy0YPQuy4g0J3RltC20LjQvdGB0YzQutCwIiwKICAgICAgICAgICAgInNldHRsZW1lbnRfdHlwZSI6ICJDSVRZIiwKICAgICAgICAgICAgInNldHRsZW1lbnRfaWQiOiAiZmI1ZTZmMDctMGMyZC00YzVjLThiYzUtZjBiODZiYjk0NDk0IiwKICAgICAgICAgICAgInNldHRsZW1lbnQiOiAi0KfQo9CT0KPQh9CSIiwKICAgICAgICAgICAgImNvdW50cnkiOiAiVUEiLAogICAgICAgICAgICAiYnVpbGRpbmciOiAiMTUiLAogICAgICAgICAgICAiYXJlYSI6ICLQpdCQ0KDQmtCG0JLQodCs0JrQkCIsCiAgICAgICAgICAgICJhcGFydG1lbnQiOiAiMjMiCiAgICAgICAgfQogICAgXQp9Cg==",
       "signed_content_encoding":"base64"
     })
+
+  @task(25)
+  def create_employee_request(self):
+    response = self.client.post("/api/employee_requests", headers=self.login_headers("OWNER"), json={
+      "employee_request": {
+        "position": "P2",
+        "start_date": "2016-03-02",
+        "status": "NEW",
+        "employee_type": "DOCTOR",
+        "division_id": "813a81b0-d8ae-4458-a60c-8243fa8baee7",
+        "party": {
+          "first_name": "Олександр",
+          "last_name": "Вірний",
+          "second_name": "Вікторович",
+          "birth_date": "1984-07-12",
+          "gender": "MALE",
+          "tax_id": "3067305998",
+          "email": "svetavedmed+3@gmail.com",
+          "documents": [
+            {
+              "type": "PASSPORT",
+              "number": "120518"
+            }
+          ],
+          "phones": [
+            {
+              "type": "MOBILE",
+              "number": "+380503410870"
+            }
+          ]
+        },
+        "doctor": {
+          "educations": [
+            {
+              "country": "UA",
+              "city": "Київ",
+              "institution_name": "Академія Богомольця",
+              "issued_date": "2017-08-05",
+              "diploma_number": "DD123543",
+              "degree": "MASTER",
+              "speciality": "Педіатр"
+            }
+          ],
+          "qualifications": [
+            {
+              "type": "STAZHUVANNYA",
+              "institution_name": "Академія Богомольця",
+              "speciality": "Педіатр",
+              "issued_date": "2017-08-05",
+              "certificate_number": "2017-08-05"
+            }
+          ],
+          "specialities": [
+            {
+              "speciality": "FAMILY_DOCTOR",
+              "speciality_officio": True,
+              "level": "FIRST",
+              "qualification_type": "AWARDING",
+              "attestation_name": "Академія Богомольця",
+              "attestation_date": "2017-08-05",
+              "valid_to_date": "2017-08-05",
+              "certificate_number": "AB/21331"
+            }
+          ],
+          "science_degree": {
+            "country": "UA",
+            "city": "Київ",
+            "degree": "DOCTOR_OF_SCIENCE",
+            "institution_name": "Академія Богомольця",
+            "diploma_number": "DD123543",
+            "speciality": "THERAPIST",
+            "issued_date": "2017-08-05"
+          }
+        }
+      }
+    })
+    self.employee_request_id = response.json()["data"]["id"]
+
+  @task(10)
+  def approve_employee_request(self):
+    if self.employee_request_id:
+      result = self.client.post("/oauth/tokens", json={
+        "token": {
+          "grant_type": "password",
+          "email": "svetavedmed+3@gmail.com",
+          "password": "12345678",
+          "client_id": config["FE_CLIENT_ID"],
+          "scope": "employee_request:approve employee_request:reject"
+        }
+      })
+      if "data" in result.json():
+        token = result.json()["data"]["value"]
+      else:
+        return None
+
+      headers = {
+        'Authorization': 'Bearer {token}'.format(token=token),
+        'api-key': config["MIS_CLIENT_SECRET"],
+        'Content-Type': 'application/json',
+      }
+
+      self.client.post("/api/employee_requests/{id}/approve".format(id=self.employee_request_id), headers=headers)
 
   def login_headers(self, type="MIS"):
     if self.tokens[type]:
@@ -146,7 +249,6 @@ class MithrilTaskSet(TaskSet):
     if "data" in result.json():
       session_token = result.json()["data"]["value"]
     else:
-      print(result.json())
       return None
 
     """
@@ -168,7 +270,6 @@ class MithrilTaskSet(TaskSet):
     if "data" in result.json():
       auth_token = result.json()["data"]["value"]
     else:
-      print(result.json())
       return None
 
     """
@@ -187,7 +288,6 @@ class MithrilTaskSet(TaskSet):
     if "data" in result.json():
       return result.json()["data"]["value"]
     else:
-      print(result.json())
       return None
 
 class WebsiteUser(HttpLocust):
