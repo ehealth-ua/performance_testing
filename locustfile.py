@@ -82,7 +82,7 @@ PREPROD = {
 config = DEV
 
 class MithrilTaskSet(TaskSet):
-  token = None
+  tokens = {"MIS": None, "ADMIN": None, "OWNER": None}
 
   @task(1)
   def login(self):
@@ -118,12 +118,12 @@ class MithrilTaskSet(TaskSet):
     })
 
   def login_headers(self, type="MIS"):
-    if self.token:
-      token = self.token
+    if self.tokens[type]:
+      token = self.tokens[type]
     else:
       token = self.do_login(type)
       if token:
-        self.token = token
+        self.tokens[type] = token
 
     return {
       'Authorization': 'Bearer {token}'.format(token=token),
