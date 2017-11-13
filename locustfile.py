@@ -1,4 +1,6 @@
 from locust import HttpLocust, TaskSet, task
+import random
+import json
 
 DEV = {
   "FE_CLIENT_ID": "e2e1d2c8-9bac-43c6-adef-83239940b30a",
@@ -81,6 +83,8 @@ PREPROD = {
 
 config = DEV
 
+get_by_id = 5
+
 class MithrilTaskSet(TaskSet):
   tokens = {"MIS": None, "ADMIN": None, "OWNER": None}
   employee_request_id = None
@@ -109,6 +113,21 @@ class MithrilTaskSet(TaskSet):
   def get_global_parameters(self):
     self.client.get("/api/global_parameters", headers=self.login_headers("ADMIN"))
 
+  # Legal entities
+  @task(50)
+  def get_legal_entities(self):
+    headers = self.login_headers()
+    result = self.client.get('/api/legal_entities', headers=headers)
+
+    if "data" in result.json():
+      legal_ids = []
+      for declaration in result.json()["data"]:
+        legal_ids.append(declaration["id"])
+
+      for _ in range(get_by_id):
+          legal_id = random.choice(legal_ids)
+          self.client.get("/api/legal_entities/%s" % legal_id, headers=headers)
+
   @task(25)
   def create_legal_entity(self):
     headers = self.login_headers()
@@ -118,82 +137,82 @@ class MithrilTaskSet(TaskSet):
       "signed_content_encoding":"base64"
     })
 
+  # Declarations
+  @task(50)
+  def get_declarations(self):
+    headers = self.login_headers("OWNER")
+    result = self.client.get("/api/declarations", headers=headers)
+
+    if "data" in result.json():
+      decl_ids = []
+      for declaration in result.json()["data"]:
+        decl_ids.append(declaration["id"])
+
+      for _ in range(get_by_id):
+          decl_id = random.choice(decl_ids)
+          self.client.get("/api/declarations/%s" % decl_id, headers=headers)
+
+  # Declaration Requests
+  @task(50)
+  def get_declaration_requests(self):
+    headers = self.login_headers("OWNER")
+    result = self.client.get("/api/declaration_requests", headers=headers)
+
+    if "data" in result.json():
+      decl_req_ids = []
+      for decl_req in result.json()["data"]:
+        decl_req_ids.append(decl_req["id"])
+
+      for _ in range(get_by_id):
+          decl_req_id = random.choice(decl_req_ids)
+          self.client.get("/api/declaration_requests/%s" % decl_req_id, headers=headers)
+
+  @task(25)
+  def create_declaration_request(self):
+    headers = self.login_headers("OWNER")
+
+    with open("create_decl_request.json", "r") as json_file:
+      json_data = json.load(json_file)
+      self.client.post("/api/declaration_requests", headers=headers, json=json_data)
+
+  # Employee
+  @task(50)
+  def get_employees(self):
+    headers = self.login_headers("OWNER")
+    result = self.client.get("/api/employees", headers=headers)
+
+    if "data" in result.json():
+      employee_ids = []
+      for employee in result.json()["data"]:
+        employee_ids.append(employee["id"])
+
+      for _ in range(get_by_id):
+          employee_id = random.choice(employee_ids)
+          self.client.get("/api/employees/%s" % employee_id, headers=headers)
+
+  # Emloyee request
+  @task(50)
+  def get_employee_requests(self):
+    headers = self.login_headers("OWNER")
+    result = self.client.get("/api/employee_requests", headers=headers)
+
+    if "data" in result.json():
+      employee_req_ids = []
+      for employee_req in result.json()["data"]:
+        employee_req_ids.append(employee_req["id"])
+
+      for _ in range(get_by_id):
+          employee_req_id = random.choice(employee_req_ids)
+          self.client.get("/api/employee_requests/%s" % employee_req_id, headers=headers)
+
   @task(25)
   def create_employee_request(self):
-    response = self.client.post("/api/employee_requests", headers=self.login_headers("OWNER"), json={
-      "employee_request": {
-        "position": "P2",
-        "start_date": "2016-03-02",
-        "status": "NEW",
-        "employee_type": "DOCTOR",
-        "division_id": "813a81b0-d8ae-4458-a60c-8243fa8baee7",
-        "party": {
-          "first_name": "Олександр",
-          "last_name": "Вірний",
-          "second_name": "Вікторович",
-          "birth_date": "1984-07-12",
-          "gender": "MALE",
-          "tax_id": "3067305998",
-          "email": "svetavedmed+3@gmail.com",
-          "documents": [
-            {
-              "type": "PASSPORT",
-              "number": "120518"
-            }
-          ],
-          "phones": [
-            {
-              "type": "MOBILE",
-              "number": "+380503410870"
-            }
-          ]
-        },
-        "doctor": {
-          "educations": [
-            {
-              "country": "UA",
-              "city": "Київ",
-              "institution_name": "Академія Богомольця",
-              "issued_date": "2017-08-05",
-              "diploma_number": "DD123543",
-              "degree": "MASTER",
-              "speciality": "Педіатр"
-            }
-          ],
-          "qualifications": [
-            {
-              "type": "STAZHUVANNYA",
-              "institution_name": "Академія Богомольця",
-              "speciality": "Педіатр",
-              "issued_date": "2017-08-05",
-              "certificate_number": "2017-08-05"
-            }
-          ],
-          "specialities": [
-            {
-              "speciality": "FAMILY_DOCTOR",
-              "speciality_officio": True,
-              "level": "FIRST",
-              "qualification_type": "AWARDING",
-              "attestation_name": "Академія Богомольця",
-              "attestation_date": "2017-08-05",
-              "valid_to_date": "2017-08-05",
-              "certificate_number": "AB/21331"
-            }
-          ],
-          "science_degree": {
-            "country": "UA",
-            "city": "Київ",
-            "degree": "DOCTOR_OF_SCIENCE",
-            "institution_name": "Академія Богомольця",
-            "diploma_number": "DD123543",
-            "speciality": "THERAPIST",
-            "issued_date": "2017-08-05"
-          }
-        }
-      }
-    })
-    self.employee_request_id = response.json()["data"]["id"]
+    headers=self.login_headers("OWNER")
+
+    with open("create_employee.json", "r") as json_file:
+      json_data = json.load(json_file)
+      response = self.client.post("/api/employee_requests", headers=headers, json=json_data)
+      self.employee_request_id = response.json()["data"]["id"]
 
   @task(10)
   def approve_employee_request(self):
@@ -220,6 +239,7 @@ class MithrilTaskSet(TaskSet):
 
       self.client.post("/api/employee_requests/{id}/approve".format(id=self.employee_request_id), headers=headers)
 
+  # Helpers
   def login_headers(self, type="MIS"):
     if self.tokens[type]:
       token = self.tokens[type]
@@ -289,6 +309,7 @@ class MithrilTaskSet(TaskSet):
       return result.json()["data"]["value"]
     else:
       return None
+
 
 class WebsiteUser(HttpLocust):
   task_set = MithrilTaskSet

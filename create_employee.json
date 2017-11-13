@@ -1,0 +1,73 @@
+{
+  "employee_request": {
+    "position": "P2",
+    "start_date": "2016-03-02",
+    "status": "NEW",
+    "employee_type": "DOCTOR",
+    "division_id": "9ac99355-a737-45c5-8b26-093d5e454bd6",
+    "party": {
+      "first_name": "Олександр",
+      "last_name": "Вірний",
+      "second_name": "Вікторович",
+      "birth_date": "1984-07-12",
+      "gender": "MALE",
+      "tax_id": "3067305998",
+      "email": "svetavedmed+3@gmail.com",
+      "documents": [
+        {
+          "type": "PASSPORT",
+          "number": "120518"
+        }
+      ],
+      "phones": [
+        {
+          "type": "MOBILE",
+          "number": "+380503410870"
+        }
+      ]
+    },
+    "doctor": {
+      "educations": [
+        {
+          "country": "UA",
+          "city": "Київ",
+          "institution_name": "Академія Богомольця",
+          "issued_date": "2017-08-05",
+          "diploma_number": "DD123543",
+          "degree": "MASTER",
+          "speciality": "Педіатр"
+        }
+      ],
+      "qualifications": [
+        {
+          "type": "STAZHUVANNYA",
+          "institution_name": "Академія Богомольця",
+          "speciality": "Педіатр",
+          "issued_date": "2017-08-05",
+          "certificate_number": "2017-08-05"
+        }
+      ],
+      "specialities": [
+        {
+          "speciality": "FAMILY_DOCTOR",
+          "speciality_officio": true,
+          "level": "FIRST",
+          "qualification_type": "AWARDING",
+          "attestation_name": "Академія Богомольця",
+          "attestation_date": "2017-08-05",
+          "valid_to_date": "2017-08-05",
+          "certificate_number": "AB/21331"
+        }
+      ],
+      "science_degree": {
+        "country": "UA",
+        "city": "Київ",
+        "degree": "DOCTOR_OF_SCIENCE",
+        "institution_name": "Академія Богомольця",
+        "diploma_number": "DD123543",
+        "speciality": "THERAPIST",
+        "issued_date": "2017-08-05"
+      }
+    }
+  }
+}

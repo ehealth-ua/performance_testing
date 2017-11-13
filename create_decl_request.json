@@ -1,0 +1,142 @@
+{
+  "declaration_request": {
+    "person": {
+      "first_name": "TestYUD",
+      "last_name": "TestYUD",
+      "second_name": "TestYUD",
+      "birth_date": "2011-08-19",
+      "birth_country": "Україна",
+      "birth_settlement": "Вінниця",
+      "gender": "MALE",
+      "email": "email@example.com",
+      "tax_id": "3067305998",
+      "secret": "secret",
+      "documents": [
+        {
+          "type": "PASSPORT",
+          "number": "123456"
+        }
+      ],
+      "addresses": [
+      {
+        "type": "REGISTRATION",
+        "country": "UA",
+        "area": "ЛЬВІВСЬКА",
+        "region": "ПУСТОМИТІВСЬКИЙ",
+        "settlement": "СОРОКИ-ЛЬВІВСЬКІ",
+        "settlement_type": "CITY",
+        "settlement_id": "707dbc55-cb6b-4aaa-97c1-2a1e03476100",
+        "street_type": "STREET",
+        "street": "Ніжинська",
+        "building": "15",
+        "apartment": "23",
+        "zip": "02090"
+      },
+      {
+        "type": "RESIDENCE",
+        "country": "UA",
+        "area": "ЛЬВІВСЬКА",
+        "region": "ПУСТОМИТІВСЬКИЙ",
+        "settlement": "СОРОКИ-ЛЬВІВСЬКІ",
+        "settlement_type": "CITY",
+        "settlement_id": "707dbc55-cb6b-4aaa-97c1-2a1e03476100",
+        "street_type": "STREET",
+        "street": "Ніжинська",
+        "building": "15",
+        "apartment": "23",
+        "zip": "02090"
+      }
+    ],
+      "phones": [
+        {
+          "type": "MOBILE",
+          "number": "+380937634999"
+        }
+      ],
+      "authentication_methods": [
+        {
+          "type": "OTP",
+          "phone_number": "+380937634999"
+        }
+      ],
+      "emergency_contact": {
+        "first_name": "Петро",
+        "last_name": "Іванов",
+        "second_name": "Миколайович",
+        "phones": [
+          {
+            "type": "MOBILE",
+            "number": "+380937634999"
+          }
+        ]
+      },
+      "confidant_person": [
+        {
+          "relation_type": "PRIMARY",
+          "first_name": "Петро",
+          "last_name": "Іванов",
+          "second_name": "Миколайович",
+          "birth_date": "1991-08-19",
+          "birth_country": "Україна",
+          "birth_settlement": "Вінниця",
+          "gender": "MALE",
+          "tax_id": "3378115538",
+          "secret": "secret",
+          "documents_person": [
+            {
+              "type": "PASSPORT",
+              "number": "120518"
+            }
+          ],
+          "documents_relationship": [
+            {
+              "type": "BIRTH_CERTIFICATE",
+              "number": "120518"
+            }
+          ],
+          "phones": [
+            {
+              "type": "MOBILE",
+              "number": "+380937634999"
+            }
+          ]
+        },
+        {
+          "relation_type": "SECONDARY",
+          "first_name": "Петро",
+          "last_name": "Іванов",
+          "second_name": "Миколайович",
+          "birth_date": "1991-08-19",
+          "birth_country": "Україна",
+          "birth_settlement": "Вінниця",
+          "gender": "MALE",
+          "tax_id": "3378115538",
+          "secret": "secret",
+          "documents_person": [
+            {
+              "type": "PASSPORT",
+              "number": "120518"
+            }
+          ],
+          "documents_relationship": [
+            {
+              "type": "BIRTH_CERTIFICATE",
+              "number": "120518"
+            }
+          ],
+          "phones": [
+            {
+              "type": "MOBILE",
+              "number": "+380937634999"
+            }
+          ]
+        }
+      ],
+      "patient_signed": false,
+      "process_disclosure_data_consent": true
+    },
+    "scope": "family_doctor",
+    "employee_id": "0554f0c4-a194-47cf-8524-ee57658c90bc",
+    "division_id": "9ac99355-a737-45c5-8b26-093d5e454bd6"
+  }
+}
