@@ -105,10 +105,6 @@ class MithrilTaskSet(TaskSet):
   def get_dictionaries(self):
     self.client.get("/api/dictionaries")
 
-  # @task(25)
-  # def get_drugs(self):
-  #   self.client.get("/api/drugs", headers=self.login_headers())
-
   @task(10)
   def get_global_parameters(self):
     self.client.get("/api/global_parameters", headers=self.login_headers("ADMIN"))
@@ -171,7 +167,7 @@ class MithrilTaskSet(TaskSet):
   def create_declaration_request(self):
     headers = self.login_headers("OWNER")
 
-    with open("create_decl_request.json", "r") as json_file:
+    with open("./data/create_declaration_request.json", "r") as json_file:
       json_data = json.load(json_file)
       self.client.post("/api/declaration_requests", headers=headers, json=json_data)
 
@@ -209,7 +205,7 @@ class MithrilTaskSet(TaskSet):
   def create_employee_request(self):
     headers=self.login_headers("OWNER")
 
-    with open("create_employee.json", "r") as json_file:
+    with open("./data/create_employee.json", "r") as json_file:
       json_data = json.load(json_file)
       response = self.client.post("/api/employee_requests", headers=headers, json=json_data)
       self.employee_request_id = response.json()["data"]["id"]
@@ -312,6 +308,7 @@ class MithrilTaskSet(TaskSet):
 
 
 class WebsiteUser(HttpLocust):
+  host = 'http://localhost:4000'
   task_set = MithrilTaskSet
   min_wait = 2000
   max_wait = 9000
