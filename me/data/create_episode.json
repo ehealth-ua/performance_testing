@@ -1,0 +1,38 @@
+{
+  "id": "{{episode_id}}",
+  "type": {
+    "system": "eHealth/episode_types",
+    "code": "AMB"
+  },
+  "status": "active",
+  "name": "name",
+  "managing_organization": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "legal_entity"
+          }
+        ]
+      },
+      "value": "{{legal_entity_id}}"
+    }
+  },
+  "period": {
+    "start": "1970-01-01"
+  },
+  "care_manager": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "employee"
+          }
+        ]
+      },
+      "value": "{{doctor_id}}"
+    }
+  }
+}
