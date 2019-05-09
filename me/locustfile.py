@@ -1,5 +1,5 @@
 from locust import HttpLocust, TaskSequence, seq_task
-from datetime import datetime
+from datetime import datetime, timezone
 import base64
 import copy
 import json
@@ -30,7 +30,7 @@ class MedicalEventsTaskSequence(TaskSequence):
 
     json_data["id"] = self.episode_id
     json_data["name"] = self.randomString(random.randint(1, 200))
-    json_data["period"]["start"] = datetime.today().strftime("%Y-%m-%d")
+    json_data["period"]["start"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     json_data["managing_organization"]["identifier"]["value"] = self.client_id
     json_data["care_manager"]["identifier"]["value"] = self.employee_id
 
@@ -54,7 +54,7 @@ class MedicalEventsTaskSequence(TaskSequence):
       encounter = json.load(json_file)
 
     encounter["id"] = encounter_id
-    encounter["date"] = datetime.today().strftime("%Y-%m-%d")
+    encounter["date"] = datetime.now(timezone.utc).isoformat()
     encounter["visit"]["identifier"]["value"] = visit_id
     encounter["episode"]["identifier"]["value"] = self.episode_id
     encounter["performer"]["identifier"]["value"] = self.employee_id
@@ -86,7 +86,7 @@ class MedicalEventsTaskSequence(TaskSequence):
         del condition["asserter"]
 
       condition["context"]["identifier"]["value"] = encounter_id
-      condition["asserted_date"] = datetime.today().strftime("%Y-%m-%d")
+      condition["asserted_date"] = datetime.now(timezone.utc).isoformat()
       conditions.append(condition)
       self.inserted_conditions.append(condition["id"])
 
@@ -101,7 +101,7 @@ class MedicalEventsTaskSequence(TaskSequence):
         "id"]
 
     self.encounter_package = {"encounter": encounter, "conditions": conditions}
-    signed_data = base64.b64encode(str(self.encounter_package).encode("ascii"))
+    signed_data = base64.b64encode(json.dumps(self.encounter_package).encode("ascii"))
     json_data["visit"]["id"] = visit_id
     json_data["signed_data"] = signed_data.decode("ascii")
 
@@ -130,10 +130,16 @@ class MedicalEventsTaskSequence(TaskSequence):
       json_data = json.load(json_file)
 
     self.encounter_package["encounter"]["cancellation_reason"] = {
-      "coding": [{"system": "eHealth/cancellation_reasons", "code": "misspelling"}]}
+      "coding": [{"system": "eHealth/cancellation_reasons", "code": "typo"}]}
     self.encounter_package["encounter"]["explanatory_letter"] = self.randomString(
       random.randint(1, 2000))
-    signed_data = base64.b64encode(str(self.encounter_package).encode("ascii"))
+    self.encounter_package["encounter"]["status"] = "entered_in_error"
+    conditions_count = len(self.encounter_package["conditions"])
+
+    for x in range(conditions_count):
+      self.encounter_package["conditions"][x]["verification_status"] = "entered_in_error"
+
+    signed_data = base64.b64encode(json.dumps(self.encounter_package).encode("ascii"))
     json_data["signed_data"] = signed_data.decode("ascii")
 
     self.client.patch("/api/patients/{patient_id}/encounter_package".format(
@@ -146,7 +152,7 @@ class MedicalEventsTaskSequence(TaskSequence):
     with open("./data/close_episode.json", "r") as json_file:
       json_data = json.load(json_file)
 
-    json_data["period"]["end"] = datetime.today().strftime("%Y-%m-%d")
+    json_data["period"]["end"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     json_data["closing_summary"] = self.randomString(random.randint(1, 2000))
 
     self.client.patch("/api/patients/{patient_id}/episodes/{episode_id}/actions/close".format(

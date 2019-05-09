@@ -4,7 +4,7 @@
   "report_origin": {
     "coding": [
       {
-        "code": "employee",
+        "code": "related person",
         "system": "eHealth/report_origins"
       }
     ]
