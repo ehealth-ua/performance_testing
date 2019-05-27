@@ -32,7 +32,7 @@ class MedicalEventsTaskSequence(TaskSequence):
     self.initTasksData()
     headers = self.login_headers()
 
-    with open("./create_episode.json", "r") as json_file:
+    with open("./data/create_episode.json", "r") as json_file:
       json_data = json.load(json_file)
 
     json_data["id"] = self.episode_id
@@ -91,13 +91,13 @@ class MedicalEventsTaskSequence(TaskSequence):
     self.encounter_id = str(uuid.uuid4())
     visit_id = str(uuid.uuid4())
 
-    with open("./create_encounter_package.json", "r") as json_file:
+    with open("./data/create_encounter_package.json", "r") as json_file:
       json_data = json.load(json_file)
 
-    with open("./condition.json", "r") as json_file:
+    with open("./data/condition.json", "r") as json_file:
       condition_data = json.load(json_file)
 
-    with open("./encounter.json", "r") as json_file:
+    with open("./data/encounter.json", "r") as json_file:
       encounter = json.load(json_file)
 
     encounter["id"] = self.encounter_id
@@ -128,8 +128,10 @@ class MedicalEventsTaskSequence(TaskSequence):
     if reference_previous_visit:
       encounter["visit"]["identifier"]["value"] = random.choice(
         SharedData.inserted_visits[self.patient_id])
+      del signed_data["visit"]
     else:
       encounter["visit"]["identifier"]["value"] = visit_id
+      json_data["visit"]["id"] = visit_id
 
     min_conditions_count = 0
 
@@ -167,7 +169,6 @@ class MedicalEventsTaskSequence(TaskSequence):
     self.encounter_package = {"encounter": encounter, "conditions": conditions}
     signed_data = base64.b64encode(json.dumps(
       self.encounter_package).encode("ascii"))
-    json_data["visit"]["id"] = visit_id
     json_data["signed_data"] = signed_data.decode("ascii")
 
     response = self.client.post("/api/patients/{patient_id}/encounter_package".format(
@@ -180,17 +181,21 @@ class MedicalEventsTaskSequence(TaskSequence):
       while True:
         time.sleep(self.task_timeout)
 
-        response = self.client.get("/api{job_url}".format(
+        job_response = self.client.get("/api{job_url}".format(
           job_url=self.job_url), headers=headers, name="get_job")
 
-        if response.status_code == 200 or response.status_code == 303:
-          response_json = json.loads(response.text)
+        if job_response.status_code == 200 or job_response.status_code == 303:
+          response_json = json.loads(job_response.text)
           if response_json["data"]["status"] == "processed":
             SharedData.inserted_visits[self.patient_id].append(visit_id)
 
             for x in range(conditions_count):
               SharedData.inserted_conditions[self.patient_id].append(
                 condition["id"])
+
+          if response_json["data"]["status"] == "failed" or response_json["data"]["status"] == "failed_with_error":
+            print(reference_previous_visit)
+            self.error = True
 
           if response_json["data"]["status"] != "pending":
             break
@@ -205,7 +210,7 @@ class MedicalEventsTaskSequence(TaskSequence):
 
     headers = self.login_headers()
 
-    with open("./update_episode.json", "r") as json_file:
+    with open("./data/update_episode.json", "r") as json_file:
       json_data = json.load(json_file)
 
     json_data["name"] = self.randomString(random.randint(1, 200))
@@ -241,7 +246,7 @@ class MedicalEventsTaskSequence(TaskSequence):
 
     headers = self.login_headers()
 
-    with open("./cancel_encounter_package.json", "r") as json_file:
+    with open("./data/cancel_encounter_package.json", "r") as json_file:
       json_data = json.load(json_file)
 
     self.encounter_package["encounter"]["cancellation_reason"] = {
@@ -268,7 +273,7 @@ class MedicalEventsTaskSequence(TaskSequence):
 
     headers = self.login_headers()
 
-    with open("./close_episode.json", "r") as json_file:
+    with open("./data/close_episode.json", "r") as json_file:
       json_data = json.load(json_file)
 
     json_data["period"]["end"] = datetime.now(
@@ -285,8 +290,8 @@ class MedicalEventsTaskSequence(TaskSequence):
 
     headers = self.login_headers()
 
-    self.client.get("/api/patients/{patient_id}/conditions".format(
-      patient_id=self.patient_id), headers=headers, name="get_conditions")
+    self.client.get("/api/patients/{patient_id}/episodes/{episode_id}/conditions".format(
+      patient_id=self.patient_id, episode_id=self.episode_id), headers=headers, name="get_conditions")
 
   @seq_task(11)
   def get_condition(self):
@@ -297,11 +302,11 @@ class MedicalEventsTaskSequence(TaskSequence):
     condition_id = SharedData.inserted_conditions[self.patient_id][len(
       SharedData.inserted_conditions[self.patient_id]) - 1]
 
-    self.client.get("/api/patients/{patient_id}/conditions/{condition_id}".format(
-      patient_id=self.patient_id, condition_id=condition_id), headers=headers, name="get_condition")
+    self.client.get("/api/patients/{patient_id}/episodes/{episode_id}/conditions/{condition_id}".format(
+      patient_id=self.patient_id, episode_id=self.episode_id, condition_id=condition_id), headers=headers, name="get_condition")
 
   def initTasksData(self):
-    with open("./context_data.txt", "r") as context_data_file:
+    with open("./data/context_data.txt", "r") as context_data_file:
       context_data = context_data_file.read().splitlines()
 
     context = random.choice(context_data)
