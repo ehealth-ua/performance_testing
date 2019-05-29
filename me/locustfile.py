@@ -128,7 +128,7 @@ class MedicalEventsTaskSequence(TaskSequence):
     if reference_previous_visit:
       encounter["visit"]["identifier"]["value"] = random.choice(
         SharedData.inserted_visits[self.patient_id])
-      del signed_data["visit"]
+      del json_data["visit"]
     else:
       encounter["visit"]["identifier"]["value"] = visit_id
       json_data["visit"]["id"] = visit_id
@@ -191,7 +191,7 @@ class MedicalEventsTaskSequence(TaskSequence):
 
             for x in range(conditions_count):
               SharedData.inserted_conditions[self.patient_id].append(
-                condition["id"])
+                conditions[x]["id"])
 
           if response_json["data"]["status"] == "failed" or response_json["data"]["status"] == "failed_with_error":
             print(reference_previous_visit)
@@ -290,7 +290,7 @@ class MedicalEventsTaskSequence(TaskSequence):
 
     headers = self.login_headers()
 
-    self.client.get("/api/patients/{patient_id}/episodes/{episode_id}/conditions".format(
+    self.client.get("/api/patients/{patient_id}/conditions".format(
       patient_id=self.patient_id, episode_id=self.episode_id), headers=headers, name="get_conditions")
 
   @seq_task(11)
@@ -302,7 +302,7 @@ class MedicalEventsTaskSequence(TaskSequence):
     condition_id = SharedData.inserted_conditions[self.patient_id][len(
       SharedData.inserted_conditions[self.patient_id]) - 1]
 
-    self.client.get("/api/patients/{patient_id}/episodes/{episode_id}/conditions/{condition_id}".format(
+    self.client.get("/api/patients/{patient_id}/conditions/{condition_id}".format(
       patient_id=self.patient_id, episode_id=self.episode_id, condition_id=condition_id), headers=headers, name="get_condition")
 
   def initTasksData(self):
