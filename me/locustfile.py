@@ -219,7 +219,6 @@ class MedicalEventsTaskSequence(TaskSequence):
                 conditions[x]["id"])
 
           if response_json["data"]["status"] == "failed" or response_json["data"]["status"] == "failed_with_error":
-            print(reference_previous_visit)
             self.error = True
 
           if response_json["data"]["status"] != "pending":
