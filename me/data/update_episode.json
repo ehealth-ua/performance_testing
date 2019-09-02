@@ -1,0 +1,16 @@
+{
+  "name": "name",
+  "care_manager": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "employee"
+          }
+        ]
+      },
+      "value": "{{doctor_id}}"
+    }
+  }
+}

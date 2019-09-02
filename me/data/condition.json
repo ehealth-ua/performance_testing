@@ -1,0 +1,79 @@
+{
+  "id": "{{condition_id}}",
+  "primary_source": true,
+  "report_origin": {
+    "coding": [
+      {
+        "code": "related person",
+        "system": "eHealth/report_origins"
+      }
+    ]
+  },
+  "asserter": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "employee"
+          }
+        ]
+      },
+      "value": "{{doctor_id}}"
+    }
+  },
+  "context": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "encounter"
+          }
+        ]
+      },
+      "value": "{{encounter_id}}"
+    }
+  },
+  "code": {
+    "coding": [
+      {
+        "system": "eHealth/ICPC2/condition_codes",
+        "code": "R80"
+      }
+    ]
+  },
+  "clinical_status": "active",
+  "verification_status": "provisional",
+  "severity": {
+    "coding": [
+      {
+        "system": "eHealth/condition_severities",
+        "code": "moderate"
+      }
+    ]
+  },
+  "body_sites": [
+    {
+      "coding": [
+        {
+          "system": "eHealth/body_sites",
+          "code": "default_body_site"
+        }
+      ],
+      "text": "Left leg"
+    }
+  ],
+  "onset_date": "2019-01-01T00:00:00.000Z",
+  "stage": {
+    "summary": {
+      "coding": [
+        {
+          "system": "eHealth/condition_stages",
+          "code": "default_condition_stage"
+        }
+      ],
+      "text": "IV"
+    }
+  }
+}

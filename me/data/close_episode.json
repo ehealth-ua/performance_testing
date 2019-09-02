@@ -1,0 +1,14 @@
+{
+  "period": {
+    "end": "1970-01-01"
+  },
+  "closing_summary": "",
+  "status_reason": {
+    "coding": [
+      {
+        "system": "eHealth/episode_closing_reasons",
+        "code": "resolved"
+      }
+    ]
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "id": "{{encounter_id}}",
+  "date": "1970-01-01",
+  "status": "finished",
+  "prescriptions": "dnt judge",
+  "visit": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "visit"
+          }
+        ]
+      },
+      "value": "{{visit_id}}"
+    }
+  },
+  "episode": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "episode"
+          }
+        ]
+      },
+      "value": "{{episode_id}}"
+    }
+  },
+  "class": {
+    "system": "eHealth/encounter_classes",
+    "code": "PHC"
+  },
+  "type": {
+    "coding": [
+      {
+        "system": "eHealth/encounter_types",
+        "code": "service_delivery_location"
+      }
+    ]
+  },
+  "performer": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "employee"
+          }
+        ]
+      },
+      "value": "{{doctor_id}}"
+    }
+  },
+  "reasons": [
+    {
+      "coding": [
+        {
+          "system": "eHealth/ICPC2/reasons",
+          "code": "A02"
+        }
+      ]
+    },
+    {
+      "coding": [
+        {
+          "system": "eHealth/ICPC2/reasons",
+          "code": "D09"
+        }
+      ]
+    }
+  ],
+  "diagnoses": [
+    {
+      "condition": {
+        "identifier": {
+          "type": {
+            "coding": [
+              {
+                "system": "eHealth/resources",
+                "code": "condition"
+              }
+            ]
+          },
+          "value": "{{condition_id_1}}"
+        }
+      },
+      "role": {
+        "coding": [
+          {
+            "system": "eHealth/diagnosis_roles",
+            "code": "primary"
+          }
+        ]
+      },
+      "rank": 1
+    }
+  ],
+  "actions": [
+    {
+      "coding": [
+        {
+          "system": "eHealth/ICPC2/actions",
+          "code": "*30"
+        }
+      ]
+    },
+    {
+      "coding": [
+        {
+          "system": "eHealth/ICPC2/actions",
+          "code": "*30"
+        }
+      ]
+    }
+  ],
+  "division": {
+    "identifier": {
+      "type": {
+        "coding": [
+          {
+            "system": "eHealth/resources",
+            "code": "division"
+          }
+        ]
+      },
+      "value": "{{division_id}}"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "visit": {
+    "id": "{{visit_id}}",
+    "period": {
+      "start": "2019-01-01T00:00:00.000Z",
+      "end": "2019-01-01T00:15:00.000Z"
+    }
+  },
+  "signed_data": "{{create_encounter_package_base64}}"
+}
