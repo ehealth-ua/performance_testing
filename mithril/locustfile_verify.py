@@ -5,7 +5,6 @@ import csv
 
 
 def load_tokens():
-    pass
     with open(f'./data/{environment.lower()}_tokens.csv', 'r') as csv_file:
         return list(csv.DictReader(csv_file, delimiter=';'))
 
