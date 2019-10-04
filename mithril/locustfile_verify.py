@@ -30,7 +30,7 @@ class TokenVerifyTasks(TaskSet):
             headers = {
                 'api-key': config[environment]['MIS_API_KEY']
             }
-            self.client.get('/admin/tokens/{token}/verify'.format(token=token), headers=headers)
+            self.client.get('/admin/tokens/{token}/verify'.format(token=token), headers=headers, name='verify_token')
 
 
 class VerifyLocust(HttpLocust):
