@@ -56,6 +56,7 @@ class UserLoginTasks(TaskSet):
             auth_token = response.json()['data']['value']
         else:
             print(f'Failed get authorization token by user: {user_params["email"]}')
+            print(response.json())
             return None
 
         # Get grant token
