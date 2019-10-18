@@ -9,4 +9,4 @@ config = {
     }
 }
 
-environment = 'DEV'
+environment = 'PREPROD'
